@@ -1,0 +1,404 @@
+{% extends 'partials/base.html' %} {% load static %} {% load humanize %} {% block content %}
+<div class="gray py-3">
+    <div class="container">
+        <div class="row">
+            <div class="colxl-12 col-lg-12 col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">FAQ's</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="middle">
+    <div class="container">
+    
+        <div class="row justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="sec_title position-relative text-center">
+                    <h3 class="ft-bold pt-3">Frequently Asked Questions</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row align-items-center justify-content-between">
+            <div class="col-xl-12 ">
+                
+                <div class="d-block position-relative border rounded py-3 px-3 mb-4">
+                    <h4 class="ft-medium">General Questions:</h4>
+                    <div id="accordion" class="accordion">
+                        <div class="card">
+                            <div class="card-header" id="h1">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord1" aria-expanded="true" aria-controls="ord1">
+                                    What is Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord1" class="collapse show" aria-labelledby="h1" data-parent="#accordion">
+                                <div class="card-body">
+                                    Mart9ja is a multi-vendor e-commerce platform that allows buyers to shop from multiple sellers in one place. Vendors can register, list their products, and sell directly to customers across Nigeria.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h2">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord2" aria-expanded="false" aria-controls="ord2">
+                                    How do I create an account on Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord2" class="collapse" aria-labelledby="h2" data-parent="#accordion">
+                                <div class="card-body">
+                                    You can create an account by clicking the "Sign Up" button on the homepage and filling in the required information.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h3">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord3" aria-expanded="false" aria-controls="ord3">
+                                    Is Mart9ja available nationwide?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord3" class="collapse" aria-labelledby="h3" data-parent="#accordion">
+                                <div class="card-body">
+                                    Yes! Mart9ja serves customers across Nigeria. Shipping availability depends on the vendor and selected shipping method.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h4">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord4" aria-expanded="false" aria-controls="ord4">
+                                    Do I need an account to shop on Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord4" class="collapse" aria-labelledby="h4" data-parent="#accordion">
+                                <div class="card-body">
+                                    While you can browse as a guest, creating an account allows you to track orders, save addresses, and manage your preferences.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h5">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord5" aria-expanded="false" aria-controls="ord5">
+                                    How do I reset my password?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord5" class="collapse" aria-labelledby="h5" data-parent="#accordion">
+                                <div class="card-body">
+                                    Click the "Lost Your Password" link on the Sign-In page and follow the instructions sent to your email.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h6">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord6" aria-expanded="false" aria-controls="ord6">
+                                    How do I change my password?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord6" class="collapse" aria-labelledby="h6" data-parent="#accordion">
+                                <div class="card-body">
+                                    Click the "Change Password" link on the dashboard after signed in and follow the instructions.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h7">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord7" aria-expanded="false" aria-controls="ord7">
+                                    How do I update my account information?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord7" class="collapse" aria-labelledby="h7" data-parent="#accordion">
+                                <div class="card-body">
+                                    You can update your account information by logging in and navigating to your account Profile.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-xl-12 ">
+                
+                <div class="d-block position-relative border rounded py-3 px-3 mb-4">
+                    <h4 class="ft-medium">Orders & Payments:</h4>
+                    <div id="accordion" class="accordion">
+                        <div class="card">
+                            <div class="card-header" id="h8">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord8" aria-expanded="true" aria-controls="ord8">
+                                    How do I place an order?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord8" class="collapse show" aria-labelledby="h8" data-parent="#accordion">
+                                <div class="card-body">
+                                    Browse products, add items to your cart, and proceed to checkout. Follow the on-screen instructions to complete your purchase.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h9">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord9" aria-expanded="true" aria-controls="ord9">
+                                    Are there multiple payment methods?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord9" class="collapse show" aria-labelledby="h9" data-parent="#accordion">
+                                <div class="card-body">
+                                    Yes, Mart9ja supports a variety of payment methods to provide you with flexibility. You can pay using Card payment methods, e.g., credit/debit cards (Visa, Mastercard, etc.), direct bank transfers, mobile money options like Paystack, Monnify, Flutterwave, etc. This ensures you can choose the option that best suits your needs.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h10">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord10" aria-expanded="false" aria-controls="ord10">
+                                    Can I track Orders
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord10" class="collapse" aria-labelledby="h10" data-parent="#accordion">
+                                <div class="card-body">
+                                    Yes, you can! Mart9ja provides order tracking capabilities for shipments handled by various logistics providers, including DHL, FedEx, UPS, and GIG Logistics. Once your order is shipped, you will receive tracking details via email or SMS, and you can also track your order directly within your Mart9ja account. This ensures you stay informed about your delivery's progress, regardless of the shipping service used.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h11">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord11" aria-expanded="false" aria-controls="ord11">
+                                    Can I use coupons and discounts?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord11" class="collapse" aria-labelledby="h11" data-parent="#accordion">
+                                <div class="card-body">
+                                    Yes! Mart9ja and its vendors frequently offer coupons and discounts. You can use these during checkout, provided you meet the qualification criteria and the promotion is still active. Be sure to check the terms and conditions of each coupon or discount for specific details.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h12">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord12" aria-expanded="false" aria-controls="ord12">
+                                    Is my payment information secure?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord12" class="collapse" aria-labelledby="h12" data-parent="#accordion">
+                                <div class="card-body">
+                                    Yes, we use secure payment gateways to protect your payment information.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h13">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord13" aria-expanded="false" aria-controls="ord13">
+                                    Are there secure checkouts?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord13" class="collapse" aria-labelledby="h13" data-parent="#accordion">
+                                <div class="card-body">
+                                    Absolutely! Mart9ja prioritizes the security of your payment information. We utilize industry-standard encryption and secure payment gateways to ensure that your transactions are safe and protected. You can shop with confidence, knowing your financial details are handled with the utmost care.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-xl-12 ">
+                
+                <div class="d-block position-relative border rounded py-3 px-3 mb-4">
+                    <h4 class="ft-medium">Vendor Accounts & Setup:</h4>
+                    <div id="accordion" class="accordion">
+                        <div class="card">
+                            <div class="card-header" id="h14">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord14" aria-expanded="true" aria-controls="ord14">
+                                    How do I become a vendor on Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord14" class="collapse show" aria-labelledby="h14" data-parent="#accordion">
+                                <div class="card-body">
+                                    Click the "Sign-Up" button and follow the application process and select "Vendor" in the Create Account As dropdown.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h15">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord15" aria-expanded="true" aria-controls="ord15">
+                                    What are the requirements to become a vendor?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord15" class="collapse show" aria-labelledby="h15" data-parent="#accordion">
+                                <div class="card-body">
+                                    The basic requirement is your Operation License, which will be uploaded by you when registering, as would be verified by our team.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h16">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord16" aria-expanded="false" aria-controls="ord16">
+                                    How do I set up my vendor store?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord16" class="collapse" aria-labelledby="h16" data-parent="#accordion">
+                                <div class="card-body">
+                                    Once approved, you can set up your store through the vendor dashboard.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h17">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ord17" aria-expanded="false" aria-controls="ord17">
+                                    How do I list products on Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+                            <div id="ord17" class="collapse" aria-labelledby="h17" data-parent="#accordion">
+                                <div class="card-body">
+                                    You can add products through the vendor dashboard, providing product details and images.
+                                </div>
+                            </div>
+                        </div>                       
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-xl-12 ">
+                
+                <div class="d-block position-relative border rounded py-3 px-3 mb-4">
+                    <h4 class="ft-medium">Shipping & Delivery:</h4>
+                    <div id="accordion" class="accordion">
+                        <div class="card">
+                            <div class="card-header" id="h18">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord18" aria-expanded="true" aria-controls="ord18">
+                                    How do I manage shipping and delivery?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord18" class="collapse show" aria-labelledby="h18" data-parent="#accordion">
+                                <div class="card-body">
+                                    You are responsible for shipping your products to customers. You can use our integrated shipping options or manage your own.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-xl-12 ">
+                
+                <div class="d-block position-relative border rounded py-3 px-3 mb-4">
+                    <h4 class="ft-medium">Shipping & Delivery:</h4>
+                    <div id="accordion" class="accordion">
+                        <div class="card">
+                            <div class="card-header" id="h19">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord19" aria-expanded="true" aria-controls="ord19">
+                                    How do I contact Mart9ja customer support?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord19" class="collapse show" aria-labelledby="h19" data-parent="#accordion">
+                                <div class="card-body">
+                                    You can contact our customer support via email, phone and live chat.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h20">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord20" aria-expanded="true" aria-controls="ord20">
+                                    How do I report a problem or provide feedback?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord20" class="collapse show" aria-labelledby="h20" data-parent="#accordion">
+                                <div class="card-body">
+                                    You can report problems or provide feedback through the Contact Us form on our website or by contacting customer support.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h21">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord21" aria-expanded="true" aria-controls="ord21">
+                                    How does Mart9ja protect my privacy?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord21" class="collapse" aria-labelledby="h21" data-parent="#accordion">
+                                <div class="card-body">
+                                    Please refer to our Privacy Policy for detailed information on how we protect your privacy.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="h22">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#ord22" aria-expanded="true" aria-controls="ord22">
+                                    What are the terms and conditions of using Mart9ja?
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="ord22" class="collapse" aria-labelledby="h22" data-parent="#accordion">
+                                <div class="card-body">
+                                    Please refer to our Terms and Conditions for detailed information on using our platform.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="alert alert-info">
+        <h2>Approval Pending</h2>
+        <p>Your vendor account is currently under review by our admin team.</p>
+        <p>You'll receive an email notification once your account is approved.</p>
+        <p>Thank you for your patience!</p>
+        <a href="{% url 'userauths:sign-out' %}" class="btn btn-primary">Logout</a>
+    </div>
+</div>
+{% endblock %}

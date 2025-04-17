@@ -1,0 +1,158 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="gray py-3">
+    <div class="container">
+        <div class="row">
+            <div class="colxl-12 col-lg-12 col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'customer:dashboard' %}">Customer</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Addresses</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="middle">
+    <div class="container">
+        <div class="row align-items-start justify-content-between">
+            {% include 'customer/sidebar.html' %}
+
+            <div class="col-12 col-md-12 col-lg-8 col-xl-8">
+                <!-- Header with action buttons -->
+                <div class="mb-4 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0 fw-bold">Your Addresses</h4>
+                    <div>
+                        <a href="{% url 'customer:address_create' %}" 
+                            class="btn btn-sm text-white btn-success small rounded ft-medium">
+                            <i class="fas fa-plus me-1"></i> Add New Address
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Messages/Alerts -->
+                {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Address Cards Grid -->
+                <div class="row g-3">
+                    {% for address in addresses %}
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <div class="card border {% if address.is_default %}border-success{% endif %} h-90">
+                            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                                <h5 class="mb-0">
+                                    Shipping Address
+                                    {% if address.is_default %}
+                                    <span class="badge btn-success ms-2">Default</span>
+                                    {% endif %}
+                                </h5>
+                                <div class="btn-group">
+                                    <a href="{% url 'customer:address_detail' address.id %}" 
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'customer:delete_address' address.id %}" 
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="address-details mb-3">
+                                    <p class="mb-1"><strong>Full Name:</strong> {{ address.full_name }}</p>
+                                    <p class="mb-1"><strong>Email:</strong> {{ address.email }}</p>
+                                    <p class="mb-1"><strong>Phone:</strong> {{ address.mobile }}</p>
+                                    <p class="mb-1"><strong>Address:</strong> {{ address.address }}</p>
+                                    <p class="mb-1"><strong>City:</strong> {{ address.city }}</p>
+                                    <p class="mb-1"><strong>State:</strong> {{ address.state }}</p>
+                                    <p class="mb-1"><strong>Country:</strong> {{ address.country }}</p>
+                                    <p class="mb-1"><strong>Postal Code:</strong> {{ address.zip_code }}</p>
+                                </div>
+
+                                {% if not address.is_default %}
+                                <form method="POST" action="{% url 'customer:set_default_address' address.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success w-100">
+                                        Set as Default
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            You haven't saved any addresses yet. 
+                            <a href="{% url 'customer:address_create' %}" class="alert-link">
+                                Add your first address
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if addresses.paginator.num_pages > 1 %}
+                <nav aria-label="Address pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if addresses.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ addresses.previous_page_number }}">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-left"></i> Previous</span>
+                        </li>
+                        {% endif %}
+
+                        {% for num in addresses.paginator.page_range %}
+                            {% if num == addresses.number %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if addresses.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ addresses.next_page_number }}">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

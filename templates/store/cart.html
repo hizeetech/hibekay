@@ -1,0 +1,331 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="gray py-3">
+    <div class="container">
+        <div class="row">
+        <div class="colxl-12 col-lg-12 col-md-12">
+            <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'store:shop' %}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Cart</li>
+            </ol>
+            </nav>
+        </div>
+        </div>
+    </div>
+</div>
+
+<section class="middle">
+    <div class="container">
+        <div class="row justify-content-center">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <div class="sec_title position-relative text-center">
+            <h3 class="ft-bold pt-3">Cart</h3>
+            </div>
+        </div>
+        </div>
+
+        <form action="{% url 'store:create_order' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-9">
+            <h4 class="fw-bold p-3">Cart items</h4>
+            <div style="overflow-y: scroll; max-height: 650px; overflow-x: hidden" class="p-3" id="cart-items-container">
+                {% for item in items %}
+                <div class="shadow rounded mb-3 item_div_{{item.id}}">
+                <div class="row d-flex align-items-center p-3">
+                    <div class="col-lg-4 d-flex gap-3">
+                    <img src="{{item.product.image.url}}" alt="{{item.product.name}}" style="width: 100px; height: 100px; object-fit: cover" />
+                    <div class="p-2">
+                        <h5>{{item.product.name}}</h5>
+                        <p class="mb-0 mt-0">Price: &#8358;{{item.price|floatformat:2|intcomma}}</p>
+                        <p class="mb-0 mt-0">Vendor: {{item.product.vendor.profile.full_name}}</p>
+                        {% if item.color %}
+                        <p class="mb-0 mt-0">Color: {{ item.color }}</p>
+                        {% endif %}
+                        {% if item.size %}
+                        <p class="mb-0 mt-0">Size: {{ item.size }}</p>
+                        {% endif %}
+                    </div>
+                    </div>
+                    <div class="col-lg-2">
+                    <h4 class="fs-5">&#8358;{{ item.price|floatformat:2|intcomma }}</h4>
+                    </div>
+                    <div class="col-lg-2 d-flex">
+                    <button type="button" class="btn btn-success text-white btn-sm update_cart_qty" data-update_type="decrease" data-product_id="{{item.product.id}}" data-item_id="{{item.id}}">-</button>
+                    <input type="number" readonly class="form-control form-sm item-qty-{{item.id}}" value="{{item.qty}}" />
+                    <button type="button" class="btn btn-success text-white btn-sm update_cart_qty" data-update_type="increase" data-product_id="{{item.product.id}}" data-item_id="{{item.id}}">+</button>
+                    </div>
+                    <div class="col-lg-2">
+                    <h4 class="5 mb-0">&#8358;<span class="item_sub_total_{{item.id}}">{{item.sub_total|floatformat:2|intcomma}}</span></h4>
+                    </div>
+                    <div class="col-lg-2">
+                    <button type="button" class="btn bg-danger text-white btn-sm rounded delete_cart_item" data-item_id="{{item.id}}" data-product_id="{{item.product.id}}"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if suggested_products %}
+            <div class="p-3">
+                <h4 class="fw-bold mb-3">More from these Vendors</h4>
+                <div class="row">
+                    {% for product in suggested_products %}
+                    <div class="col-lg-3 col-md-3 col-6 mb-4">
+                        <div class="product-card shadow-sm rounded">
+                            <a href="{% url 'store:product_detail' product.slug %}">
+                                <img src="{{ product.image.url }}" class="img-fluid rounded-top" alt="{{ product.name }}" style="height: 120px; width: 100%; object-fit: cover;">
+                            </a>
+                            <div class="p-2">
+                                <a href="{% url 'store:product_detail' product.slug %}" class="text-dark">
+                                    <p class="mb-1 fw-bold">{{ product.name|truncatechars:20 }}</p>
+                                </a>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">&#8358;{{ product.price|floatformat:2|intcomma }}</h6>
+                                    {% comment %} <button class="btn btn-sm btn-success add-to-cart"
+                                            data-product-id="{{ product.id }}">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="p-3">
+                <h4 class="fw-bold mb-3">Shipping Detail</h4>
+                {% if request.user.is_authenticated %}
+                {% if addresses %}
+                <div class="row">
+                    {% for address in addresses %}
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                    <div class="card-wrap border rounded mb-4">
+                        <div class="card-wrap-header px-3 py-2 br-bottom d-flex align-items-center justify-content-between">
+                        <div class="card-heafder-flex">
+                            <h4 class="fs-md ft-bold mb-1">
+                            Shipping Address <a href="{% url 'customer:address_detail' address.id %}"><i class="fas fa-edit"></i></a>
+                            </h4>
+                        </div>
+                        </div>
+                        <div class="card-wrap-body px-3 py-3">
+                        <p class="mb-0"><span class="fw-bold">Full Name: </span>{{address.full_name}}</p>
+                        <p class="mb-0"><span class="fw-bold">Email: </span>{{address.email}}</p>
+                        <p class="mb-0"><span class="fw-bold">Mobile: </span>{{address.mobile}}</p>
+                        <p class="mb-0"><span class="fw-bold">Address: </span>{{address.address}}</p>
+                        <p class="mb-0"><span class="fw-bold">City: </span> {{address.city}}</p>
+                        <p class="mb-0"><span class="fw-bold">State: </span> {{address.state}}</p>
+                        <p class="mb-0"><span class="fw-bold">Country: </span> {{address.country}}</p>
+                        <div class="mt-3">
+                            <input id="address{{address.id}}" value="{{address.id}}" class="radio-custom" name="address" type="radio">
+                            <label for="address{{address.id}}" class="radio-custom-label">Select Address</label>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No address yet, <a href="{% url 'customer:address_create' %}" class="text-primary">create new address.</a></p>
+                {% endif %}
+                {% else %}
+                <p><a href="{% url 'userauths:sign-in' %}?next={{request.path}}" class="text-primary">Login </a> or <a class="text-primary" href="{% url 'userauths:sign-up' %}?next={{request.path}}">create account </a> to continue</p>
+                {% endif %}
+            </div>
+            </div>
+
+            <div class="col-lg-3">
+            <div class="shadow rounded p-3">
+                <h4 class="fw-bold">Order Summary</h4>
+                <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="fw-semibold fs-6">Sub-total</p>
+                    <p class="fs-6">&#8358;<span class="cart_sub_total">{{cart_sub_total|floatformat:2|intcomma}}</span></p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="fw-semibold fs-6">Shipping</p>
+                    <p class="fs-6">&#8358;0.00</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="fw-semibold fs-6">Tax</p>
+                    <p class="fs-6">&#8358;0.00</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <p class="fw-bold text-dark fs-5">Total</p>
+                    <p class="fw-bold text-dark fs-5">&#8358;<span class="cart_sub_total">{{cart_sub_total|floatformat:2|intcomma}}</span></p>
+                </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center w-100 mt-3">
+                {% if request.user.is_authenticated %}
+                <button type="submit" class="btn btn-success rounded text-white w-100">Proceed To Checkout <i class="fas fa-arrow-right ms-1"></i></button>
+                {% else %}
+                <div>
+                    <a href="{% url 'userauths:sign-in' %}?next={{request.path}}" class="btn btn-success rounded text-white w-100 mb-3">Login to continue <i class="fas fa-sign-in-alt ms-1"></i></a>
+                    <a href="{% url 'userauths:sign-up' %}?next={{request.path}}" class="rounded w-100 mt-3">Create account <i class="fas fa-user-plus ms-1"></i></a>
+                </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</section>
+
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Add to cart from suggested products
+        $(document).on('click', '.add-to-cart', function(e) {
+            e.preventDefault();
+            const productId = $(this).data('product-id');
+            const $button = $(this);
+            const color = ''; // You might need to get color if applicable
+            const size = '';  // You might need to get size if applicable
+
+            // Show loading state
+            $button.html('<i class="fas fa-spinner fa-spin"></i>');
+            $button.prop('disabled', true);
+
+            $.ajax({
+                url: '{% url "store:add_to_cart" %}',
+                type: 'GET', // Keep as GET as per your view
+                data: {
+                    'id': productId,
+                    'qty': 1,
+                    'color': color,
+                    'size': size,
+                    'cart_id': '{{ request.session.cart_id }}'
+                },
+                success: function(response) {
+                    // Update cart counter
+                    $('.total_cart_items').text(response.total_cart_items);
+
+                    // Show success message
+                    toastr.success(response.message);
+
+                    // Update the cart items display
+                    $.ajax({
+                        url: '{% url "store:cart" %}', // Re-fetch the cart content
+                        type: 'GET',
+                        success: function(cart_html) {
+                            $('#cart-items-container').html($(cart_html).find('#cart-items-container').html());
+                            $('.cart_sub_total').text($(cart_html).find('.cart_sub_total').text());
+                        },
+                        error: function(xhr) {
+                            console.error("Error fetching updated cart:", xhr);
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Failed to add item to cart');
+                },
+                complete: function() {
+                    // Reset button state
+                    $button.html('<i class="fas fa-cart-plus"></i>');
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+
+        // Rest of your existing cart scripts...
+        $('.update_cart_qty').on('click', function () {
+            const updateType = $(this).data('update_type');
+            const productId = $(this).data('product_id');
+            const itemId = $(this).data('item_id');
+            const qtyInput = $('.item-qty-' + itemId);
+            let currentQty = parseInt(qtyInput.val());
+            let newQty = currentQty;
+
+            if (updateType === 'increase') {
+                newQty++;
+            } else if (updateType === 'decrease' && currentQty > 1) {
+                newQty--;
+            }
+
+            if (newQty !== currentQty) {
+                $.ajax({
+                    url: '{% url "store:update_cart_item" %}', // Replace with your update cart URL
+                    type: 'GET',
+                    data: {
+                        'item_id': itemId,
+                        'qty': newQty
+                    },
+                    success: function (response) {
+                        qtyInput.val(newQty);
+                        $('.total_cart_items').text(response.total_cart_items);
+                        $('.cart_sub_total').text(response.cart_sub_total);
+                        $('.item_sub_total_' + itemId).text(response.item_sub_total);
+                        toastr.success(response.message);
+                    },
+                    error: function (xhr) {
+                        toastr.error(xhr.responseJSON.error || 'Failed to update cart');
+                        qtyInput.val(currentQty); // Revert on error
+                    }
+                });
+            }
+        });
+
+        function updateCartSummary(cartSubTotal) {
+            $('.cart_sub_total').text(cartSubTotal);
+        }
+
+        $('.delete_cart_item').on('click', function() {
+            const itemId = $(this).data('item_id');
+            const productId = $(this).data('product_id');
+            const itemDiv = $('.item_div_' + itemId);
+
+            $.ajax({
+                url: '{% url "store:delete_cart_item" %}', // Replace with your delete cart URL
+                type: 'GET',
+                data: {
+                    'item_id': itemId
+                },
+                success: function(response) {
+                    itemDiv.fadeOut(function() {
+                        $(this).remove();
+                        $('.total_cart_items').text(response.total_cart_items);
+                        $('.cart_sub_total').text(response.cart_sub_total);
+                        toastr.success(response.message);
+                        if (response.total_cart_items === 0) {
+                            location.reload(); // Reload if cart becomes empty
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    toastr.error(xhr.responseJSON.error || 'Failed to delete item');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

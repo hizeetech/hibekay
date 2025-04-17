@@ -1,0 +1,132 @@
+{% extends "partials/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y">
+    <div class="container">
+        <div class="row">
+            {% include 'vendor/sidebar.html' %}
+            <main class="col-md-9">
+                <article class="card">
+                    <header class="card-header btn-success text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">
+                                <i class="fas fa-tag mr-2"></i>{{ category.title }}
+                            </h4>
+                            <div>
+                                <a href="{% url 'vendor:update_category' category.id %}" class="btn btn-light btn-sm mr-2">
+                                    <i class="fas fa-edit mr-1"></i> Edit
+                                </a>
+                                <a href="{% url 'vendor:categories' %}" class="btn btn-light btn-sm">
+                                    <i class="fas fa-arrow-left mr-1"></i> Back
+                                </a>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-4 mb-md-0">
+                                <div class="text-center">
+                                    {% if category.image %}
+                                    <img src="{{ category.image.url }}" class="img-fluid rounded" style="max-height: 250px;">
+                                    {% else %}
+                                    <div class="bg-light p-5 rounded">
+                                        <i class="fas fa-tags fa-3x text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th width="30%">Title</th>
+                                        <td>{{ category.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Slug</th>
+                                        <td>{{ category.slug }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Status</th>
+                                        <td>
+                                            {% if category.active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created</th>
+                                        <td>{{ category.date|date:"M d, Y" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Products</th>
+                                        <td>{{ category.products.count }}</td>
+                                    </tr>
+                                </table>
+                                
+                                <div class="mt-4">
+                                    <a href="{% url 'vendor:delete_category' category.id %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash-alt mr-2"></i> Delete Category
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Products in this category -->
+                        <div class="mt-5 pt-4 border-top">
+                            <h5 class="mb-4">
+                                <i class="fas fa-boxes mr-2"></i>
+                                Products in this category ({{ category.products.count }})
+                            </h5>
+                            
+                            {% if category.products.count > 0 %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Stock</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in category.products.all %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'store:product_detail' product.slug %}">
+                                                    {{ product.name }}
+                                                </a>
+                                            </td>
+                                            <td>${{ product.price }}</td>
+                                            <td>{{ product.stock }}</td>
+                                            <td>
+                                                {% if product.status == "Published" %}
+                                                <span class="badge badge-success">Published</span>
+                                                {% else %}
+                                                <span class="badge badge-secondary">{{ product.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                No products found in this category.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            </main>
+        </div>
+    </div>
+</section>
+{% endblock %}

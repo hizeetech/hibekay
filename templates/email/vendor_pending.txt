@@ -1,0 +1,15 @@
+Thank you, {{ store_name }}!
+
+We've received your vendor application and it's currently under review.
+
+What to expect next:
+- Our team will review your application within 2-3 business days
+- You'll receive an email notification once a decision is made
+- If approved, you'll gain access to your vendor dashboard
+
+In the meantime, you can:
+- Ensure your profile information is complete
+- Review our vendor policies and guidelines
+
+Thank you for your patience!
+The Vendor Team

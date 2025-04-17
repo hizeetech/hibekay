@@ -1,0 +1,85 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold">Markethub - All Categories</h2>
+            <p class="text-muted">Browse products from various vendors</p>
+        </div>
+    </div>
+
+    {% if featured_products %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="mb-3 border-bottom pb-2">Featured Products</h4>
+        </div>
+        {% for product in featured_products %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="position-relative">
+                    <a href="{% url 'store:product_detail' product.id %}">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+                    </a>
+                    {% if product.is_on_sale %}
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                        {{ product.discount_percentage }}% OFF
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'store:product_detail' product.id %}" class="text-dark text-decoration-none">{{ product.title }}</a>
+                    </h5>
+                    <p class="text-muted small mb-2">By {{ product.vendor.username }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold text-primary">₦{{ product.total_price|floatformat:2|intcomma }}</span>
+                            {% if product.is_on_sale %}
+                            <small class="text-muted text-decoration-line-through ms-2">₦{{ product.regular_price|floatformat:2|intcomma }}</small>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">{{ product.stock }} in stock</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-12">
+            <h4 class="mb-3 border-bottom pb-2">All Categories</h4>
+        </div>
+        {% for category in categories %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-img-top bg-light" style="height: 150px; overflow: hidden;">
+                    <a href="{% url 'store:markethub_category' category.id %}">
+                        <img src="{{ category.image.url }}" class="img-fluid h-100 w-100" style="object-fit: cover;" alt="{{ category.title }}">
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'store:markethub_category' category.id %}" class="text-dark text-decoration-none">{{ category.title }}</a>
+                    </h5>
+                    <p class="card-text text-muted small">{{ category.description|striptags|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ category.active_products.count }} products</small>
+                        <small class="text-muted">Vendor: {{ category.vendor.username }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No active categories found.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

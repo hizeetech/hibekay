@@ -1,0 +1,15 @@
+Dear {{ store_name }},
+
+We regret to inform you that your vendor account application has been rejected.
+
+Possible reasons for rejection include:
+- Incomplete or inaccurate information
+- Failure to meet our vendor requirements
+- Policy violations in your application
+
+If you believe this was a mistake or would like more information, please contact our support team.
+
+Thank you for your interest in our platform.
+
+Sincerely,
+The Vendor Team

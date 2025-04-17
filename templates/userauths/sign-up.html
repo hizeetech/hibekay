@@ -1,0 +1,260 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+
+<div class="gray py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Account</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="middle">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <h1 class="fw-bold mb-2">Sign Up <i class="fas fa-user-plus ms-2"></i></h1>
+                <p class="mb-3">Welcome to our store, create a free account today!</p>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Errors:</strong>
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li><strong>{% if field != '__all__' %}{{ field|title }}: {% endif %}</strong>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <form class="border p-3 rounded" method="POST" enctype="multipart/form-data" id="registration-form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group col-md-12 mb-3">
+                            <label>Full Name *</label>
+                            {{ form.full_name }}
+                            {% if form.full_name.errors %}
+                                <div class="text-danger small">{{ form.full_name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12 mb-3">
+                            <label>Email *</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Mobile *</label>
+                            {{ form.mobile }}
+                            {% if form.mobile.errors %}
+                                <div class="text-danger small">{{ form.mobile.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Password *</label>
+                            <div class="position-relative">
+                                {{ form.password1 }}
+                                <span class="password-toggle-icon" onclick="togglePassword('id_password1')">
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                                {% if form.password1.errors %}
+                                <div class="text-danger small">{{ form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Confirm Password *</label>
+                            <div class="position-relative">
+                                {{ form.password2 }}
+                                <span class="password-toggle-icon" onclick="togglePassword('id_password2')">
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                                {% if form.password1.errors %}
+                                <div class="text-danger small">{{ form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Create Account As *</label>
+                            {{ form.user_type }}
+                            {% if form.user_type.errors %}
+                                <div class="text-danger small">{{ form.user_type.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12 mb-3" id="vendor-license-container">
+                            <label>Vendor License (PDF/Image) *</label><br><br>
+                            {{ form.vendor_license }}
+                            {% if form.vendor_license.errors %}
+                                <div class="text-danger small">{{ form.vendor_license.errors }}</div>
+                            {% endif %} <br>
+                            <small class="text-muted">Please upload your business license or permit (Max 5MB)</small>
+                        </div>
+
+                        <div class="form-group col-md-12 mb-3">
+                            <label>Captcha *</label>
+                            {{ form.captcha }}
+                            {% if form.captcha.errors %}
+                                <div class="text-danger small">{{ form.captcha.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <p class="text-muted small">
+                            By registering your details, you agree with our <a href="{% url 'store:terms_conditions' %}">Terms & Conditions</a>, <br>
+                            and <a href="{% url 'store:privacy_policy' %}">Privacy and Cookie Policy</a>.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-md full-width btn-success rounded text-light">Sign Up <i class="fas fa-user-plus ms-1"></i></button>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="{% url 'userauths:sign-in' %}">Already have an account? Sign In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .password-toggle-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #555;
+        z-index: 2;
+    }
+
+    input[type="password"], input[type="text"] {
+        padding-right: 40px; /* Ensure space for the eye icon */
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const userTypeField = document.querySelector('#id_user_type');
+    const vendorLicenseContainer = document.querySelector('#vendor-license-container');
+    const registrationForm = document.querySelector('#registration-form');
+    const passwordInput1 = document.querySelector('#id_password1');
+    const passwordInput2 = document.querySelector('#id_password2');
+
+    // Initial state
+    function toggleLicenseField() {
+        if (userTypeField.value === 'Vendor') {
+            vendorLicenseContainer.style.display = 'block';
+            // Make the license field required (HTML5 validation)
+            const licenseInput = vendorLicenseContainer.querySelector('input[type="file"]');
+            if (licenseInput) {
+                licenseInput.required = true;
+            }
+        } else {
+            vendorLicenseContainer.style.display = 'none';
+            // Remove required attribute if not vendor
+            const licenseInput = vendorLicenseContainer.querySelector('input[type="file"]');
+            if (licenseInput) {
+                licenseInput.required = false;
+            }
+        }
+    }
+
+    // Form submission validation (additional check for vendor license)
+    registrationForm.addEventListener('submit', function(e) {
+        if (userTypeField.value === 'Vendor') {
+            const licenseInput = vendorLicenseContainer.querySelector('input[type="file"]');
+            if (!licenseInput || !licenseInput.files || licenseInput.files.length === 0) {
+                e.preventDefault();
+                // Ensure error message is visible
+                vendorLicenseContainer.style.display = 'block';
+                // Create error message if it doesn't exist
+                let errorDiv = vendorLicenseContainer.querySelector('.license-error');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'text-danger small license-error';
+                    errorDiv.textContent = 'Vendor license is required';
+                    licenseInput.parentNode.insertBefore(errorDiv, licenseInput.nextSibling);
+                }
+                // Scroll to the error
+                vendorLicenseContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                // Remove error message if license is present on submit
+                const errorDiv = vendorLicenseContainer.querySelector('.license-error');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+        }
+    });
+
+    // User type change handler
+    userTypeField.addEventListener('change', toggleLicenseField);
+
+    // Initialize on page load
+    toggleLicenseField();
+});
+
+function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = passwordInput.nextElementSibling.querySelector('i');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+
+<style>
+    .password-toggle-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #555;
+    }
+</style>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function() {
+        this.querySelector('button[type="submit"]').disabled = true;
+    });
+</script>
+
+{% endblock content %}
