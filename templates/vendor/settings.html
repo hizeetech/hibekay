@@ -1,0 +1,354 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payout Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .payout-settings {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .payout-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .saved-info {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payout-settings">
+        <h2 class="mb-4">Payout Settings</h2>
+        
+        <!-- Saved Information Display -->
+        <div id="saved-info" class="saved-info">
+            <h5><i class="bi bi-check-circle-fill text-success"></i> Current Payout Settings</h5>
+            <div id="saved-details">
+                {% if bank_account %}
+                    <p><strong>Method:</strong> Nigerian Bank Transfer</p>
+                    <p><strong>Account Name:</strong> {{ bank_account.account_name }}</p>
+                    <p><strong>Account Number:</strong> {{ bank_account.account_number }}</p>
+                    <p><strong>Bank Name:</strong> {{ bank_account.bank_name }}</p>
+                    <p class="text-muted">Last updated: {{ bank_account.updated_at|date:"M d, Y H:i" }}</p>
+                {% elif paypal_account %}
+                    <p><strong>Method:</strong> PayPal</p>
+                    <p><strong>PayPal Email:</strong> {{ paypal_account.email }}</p>
+                    <p class="text-muted">Last updated: {{ paypal_account.updated_at|date:"M d, Y H:i" }}</p>
+                {% else %}
+                    <p>No payout method configured yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <form id="payout-form" method="post" action="{% url 'vendor:save_payout_settings' %}">
+            {% csrf_token %}
+            <input type="hidden" name="is_updated" value="true">
+            
+            <div class="form-section">
+                <h4 class="mb-3">Payout Method</h4>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="payout_method" id="payout-nigerian-bank" 
+                            value="nigerian_bank" {% if bank_account %}checked{% elif not paypal_account %}checked{% endif %}>
+                    <label class="form-check-label" for="payout-nigerian-bank">
+                        <strong>Nigerian Bank Transfer</strong>
+                    </label>
+                </div>
+                
+                <div id="nigerian-bank-details" class="mt-3" {% if not bank_account and paypal_account %}style="display: none;"{% endif %}>
+                    <div class="mb-3">
+                        <label for="account-name" class="form-label">Account Name</label>
+                        <input type="text" class="form-control" id="account-name" name="account_name" 
+                                value="{{ bank_account.account_name|default:'' }}"
+                                placeholder="Enter account name exactly as it appears on your bank statement" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="account-number" class="form-label">Account Number</label>
+                        <input type="text" class="form-control" id="account-number" name="account_number" 
+                                value="{{ bank_account.account_number|default:'' }}"
+                                placeholder="Enter 10-digit NUBAN account number" required
+                                pattern="[0-9]{10}" title="Please enter a valid 10-digit account number">
+                        <div class="form-text">Must be 10 digits without spaces or special characters</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="bank-name" class="form-label">Bank Name</label>
+                        <select class="form-select" id="bank-name" name="bank_name" required>
+                            <option value="" disabled {% if not bank_account %}selected{% endif %}>Select your bank</option>
+                            <!-- Commercial Banks -->
+                            <optgroup label="Commercial Banks">
+                                <option value="Access Bank Plc" {% if bank_account.bank_name == "Access Bank Plc" %}selected{% endif %}>Access Bank Plc</option>
+                                <option value="Citibank Nigeria Limited" {% if bank_account.bank_name == "Citibank Nigeria Limited" %}selected{% endif %}>Citibank Nigeria Limited</option>
+                                <option value="Ecobank Nigeria Limited" {% if bank_account.bank_name == "Ecobank Nigeria Limited" %}selected{% endif %}>Ecobank Nigeria Limited</option>
+                                <option value="Fidelity Bank Plc" {% if bank_account.bank_name == "Fidelity Bank Plc" %}selected{% endif %}>Fidelity Bank Plc</option>
+                                <option value="First Bank of Nigeria Limited" {% if bank_account.bank_name == "First Bank of Nigeria Limited" %}selected{% endif %}>First Bank of Nigeria Limited</option>
+                                <option value="First City Monument Bank Limited" {% if bank_account.bank_name == "First City Monument Bank Limited" %}selected{% endif %}>First City Monument Bank Limited</option>
+                                <option value="Globus Bank Limited" {% if bank_account.bank_name == "Globus Bank Limited" %}selected{% endif %}>Globus Bank Limited</option>
+                                <option value="Guaranty Trust Bank Plc" {% if bank_account.bank_name == "Guaranty Trust Bank Plc" %}selected{% endif %}>Guaranty Trust Bank Plc</option>
+                                <option value="Heritage Banking Company Limited" {% if bank_account.bank_name == "Heritage Banking Company Limited" %}selected{% endif %}>Heritage Banking Company Limited</option>
+                                <option value="Keystone Bank Limited" {% if bank_account.bank_name == "Keystone Bank Limited" %}selected{% endif %}>Keystone Bank Limited</option>
+                                <option value="Parallex Bank Limited" {% if bank_account.bank_name == "Parallex Bank Limited" %}selected{% endif %}>Parallex Bank Limited</option>
+                                <option value="Polaris Bank Limited" {% if bank_account.bank_name == "Polaris Bank Limited" %}selected{% endif %}>Polaris Bank Limited</option>
+                                <option value="PremiumTrust Bank Limited" {% if bank_account.bank_name == "PremiumTrust Bank Limited" %}selected{% endif %}>PremiumTrust Bank Limited</option>
+                                <option value="Providus Bank Limited" {% if bank_account.bank_name == "Providus Bank Limited" %}selected{% endif %}>Providus Bank Limited</option>
+                                <option value="Stanbic IBTC Bank Plc" {% if bank_account.bank_name == "Stanbic IBTC Bank Plc" %}selected{% endif %}>Stanbic IBTC Bank Plc</option>
+                                <option value="Standard Chartered Bank Nigeria Limited" {% if bank_account.bank_name == "Standard Chartered Bank Nigeria Limited" %}selected{% endif %}>Standard Chartered Bank Nigeria Limited</option>
+                                <option value="Sterling Bank Plc" {% if bank_account.bank_name == "Sterling Bank Plc" %}selected{% endif %}>Sterling Bank Plc</option>
+                                <option value="SunTrust Bank Nigeria Limited" {% if bank_account.bank_name == "SunTrust Bank Nigeria Limited" %}selected{% endif %}>SunTrust Bank Nigeria Limited</option>
+                                <option value="Titan Trust Bank Limited" {% if bank_account.bank_name == "Titan Trust Bank Limited" %}selected{% endif %}>Titan Trust Bank Limited</option>
+                                <option value="Union Bank of Nigeria Plc" {% if bank_account.bank_name == "Union Bank of Nigeria Plc" %}selected{% endif %}>Union Bank of Nigeria Plc</option>
+                                <option value="United Bank for Africa Plc" {% if bank_account.bank_name == "United Bank for Africa Plc" %}selected{% endif %}>United Bank for Africa Plc</option>
+                                <option value="Unity Bank Plc" {% if bank_account.bank_name == "Unity Bank Plc" %}selected{% endif %}>Unity Bank Plc</option>
+                                <option value="Wema Bank Plc" {% if bank_account.bank_name == "Wema Bank Plc" %}selected{% endif %}>Wema Bank Plc</option>
+                                <option value="Zenith Bank Plc" {% if bank_account.bank_name == "Zenith Bank Plc" %}selected{% endif %}>Zenith Bank Plc</option>
+                            </optgroup>
+                            
+                            <!-- Non-Interest Banks -->
+                            <optgroup label="Non-Interest Banks">
+                                <option value="Jaiz Bank Plc" {% if bank_account.bank_name == "Jaiz Bank Plc" %}selected{% endif %}>Jaiz Bank Plc</option>
+                                <option value="TajBank Limited" {% if bank_account.bank_name == "TajBank Limited" %}selected{% endif %}>TajBank Limited</option>
+                                <option value="Lotus Bank Limited" {% if bank_account.bank_name == "Lotus Bank Limited" %}selected{% endif %}>Lotus Bank Limited</option>
+                                <option value="Alternative Bank Limited" {% if bank_account.bank_name == "Alternative Bank Limited" %}selected{% endif %}>Alternative Bank Limited</option>
+                            </optgroup>
+                            
+                            <!-- Merchant Banks -->
+                            <optgroup label="Merchant Banks">
+                                <option value="Coronation Merchant Bank Limited" {% if bank_account.bank_name == "Coronation Merchant Bank Limited" %}selected{% endif %}>Coronation Merchant Bank Limited</option>
+                                <option value="FBNQuest Merchant Bank Limited" {% if bank_account.bank_name == "FBNQuest Merchant Bank Limited" %}selected{% endif %}>FBNQuest Merchant Bank Limited</option>
+                                <option value="FSDH Merchant Bank Limited" {% if bank_account.bank_name == "FSDH Merchant Bank Limited" %}selected{% endif %}>FSDH Merchant Bank Limited</option>
+                                <option value="Rand Merchant Bank Nigeria Limited" {% if bank_account.bank_name == "Rand Merchant Bank Nigeria Limited" %}selected{% endif %}>Rand Merchant Bank Nigeria Limited</option>
+                                <option value="Nova Merchant Bank Limited" {% if bank_account.bank_name == "Nova Merchant Bank Limited" %}selected{% endif %}>Nova Merchant Bank Limited</option>
+                            </optgroup>
+                            
+                            <!-- Microfinance Banks -->
+                            <optgroup label="Microfinance Banks">
+                                <option value="AB Microfinance Bank Nigeria Limited" {% if bank_account.bank_name == "AB Microfinance Bank Nigeria Limited" %}selected{% endif %}>AB Microfinance Bank Nigeria Limited</option>
+                                <option value="Addosser Microfinance Bank Limited" {% if bank_account.bank_name == "Addosser Microfinance Bank Limited" %}selected{% endif %}>Addosser Microfinance Bank Limited</option>
+                                <option value="Advans La Fayette Microfinance Bank Limited" {% if bank_account.bank_name == "Advans La Fayette Microfinance Bank Limited" %}selected{% endif %}>Advans La Fayette Microfinance Bank Limited</option>
+                                <option value="Baobab Microfinance Bank Limited" {% if bank_account.bank_name == "Baobab Microfinance Bank Limited" %}selected{% endif %}>Baobab Microfinance Bank Limited</option>
+                                <option value="Boctrust Microfinance Bank Limited" {% if bank_account.bank_name == "Boctrust Microfinance Bank Limited" %}selected{% endif %}>Boctrust Microfinance Bank Limited</option>
+                                <option value="Branch International Financial Services Limited" {% if bank_account.bank_name == "Branch International Financial Services Limited" %}selected{% endif %}>Branch International Financial Services Limited</option>
+                                <option value="CEMCS Microfinance Bank Limited" {% if bank_account.bank_name == "CEMCS Microfinance Bank Limited" %}selected{% endif %}>CEMCS Microfinance Bank Limited</option>
+                                <option value="Fairmoney Microfinance Bank Limited" {% if bank_account.bank_name == "Fairmoney Microfinance Bank Limited" %}selected{% endif %}>Fairmoney Microfinance Bank Limited</option>
+                                <option value="Finca Microfinance Bank Limited" {% if bank_account.bank_name == "Finca Microfinance Bank Limited" %}selected{% endif %}>Finca Microfinance Bank Limited</option>
+                                <option value="Firmus Microfinance Bank Limited" {% if bank_account.bank_name == "Firmus Microfinance Bank Limited" %}selected{% endif %}>Firmus Microfinance Bank Limited</option>
+                                <option value="Fortis Microfinance Bank Limited" {% if bank_account.bank_name == "Fortis Microfinance Bank Limited" %}selected{% endif %}>Fortis Microfinance Bank Limited</option>
+                                <option value="Fullrange Microfinance Bank Limited" {% if bank_account.bank_name == "Fullrange Microfinance Bank Limited" %}selected{% endif %}>Fullrange Microfinance Bank Limited</option>
+                                <option value="Hasal Microfinance Bank Limited" {% if bank_account.bank_name == "Hasal Microfinance Bank Limited" %}selected{% endif %}>Hasal Microfinance Bank Limited</option>
+                                <option value="LAPO Microfinance Bank Limited" {% if bank_account.bank_name == "LAPO Microfinance Bank Limited" %}selected{% endif %}>LAPO Microfinance Bank Limited</option>
+                                <option value="Mkobo Microfinance Bank Limited" {% if bank_account.bank_name == "Mkobo Microfinance Bank Limited" %}selected{% endif %}>Mkobo Microfinance Bank Limited</option>
+                                <option value="Money Trust Microfinance Bank Limited" {% if bank_account.bank_name == "Money Trust Microfinance Bank Limited" %}selected{% endif %}>Money Trust Microfinance Bank Limited</option>
+                                <option value="Mutual Trust Microfinance Bank Limited" {% if bank_account.bank_name == "Mutual Trust Microfinance Bank Limited" %}selected{% endif %}>Mutual Trust Microfinance Bank Limited</option>
+                                <option value="NPF Microfinance Bank Plc" {% if bank_account.bank_name == "NPF Microfinance Bank Plc" %}selected{% endif %}>NPF Microfinance Bank Plc</option>
+                                <option value="Peace Microfinance Bank Limited" {% if bank_account.bank_name == "Peace Microfinance Bank Limited" %}selected{% endif %}>Peace Microfinance Bank Limited</option>
+                                <option value="Pennywise Microfinance Bank Limited" {% if bank_account.bank_name == "Pennywise Microfinance Bank Limited" %}selected{% endif %}>Pennywise Microfinance Bank Limited</option>
+                                <option value="Personal Trust Microfinance Bank Limited" {% if bank_account.bank_name == "Personal Trust Microfinance Bank Limited" %}selected{% endif %}>Personal Trust Microfinance Bank Limited</option>
+                                <option value="Renmoney Microfinance Bank Limited" {% if bank_account.bank_name == "Renmoney Microfinance Bank Limited" %}selected{% endif %}>Renmoney Microfinance Bank Limited</option>
+                                <option value="Sparkle Microfinance Bank Limited" {% if bank_account.bank_name == "Sparkle Microfinance Bank Limited" %}selected{% endif %}>Sparkle Microfinance Bank Limited</option>
+                                <option value="VFD Microfinance Bank Limited" {% if bank_account.bank_name == "VFD Microfinance Bank Limited" %}selected{% endif %}>VFD Microfinance Bank Limited</option>
+                            </optgroup>
+                            
+                            <!-- Other Financial Institutions -->
+                            <optgroup label="Other Financial Institutions">
+                                <option value="AG Mortgage Bank Plc" {% if bank_account.bank_name == "AG Mortgage Bank Plc" %}selected{% endif %}>AG Mortgage Bank Plc</option>
+                                <option value="Brent Mortgage Bank Limited" {% if bank_account.bank_name == "Brent Mortgage Bank Limited" %}selected{% endif %}>Brent Mortgage Bank Limited</option>
+                                <option value="Infinity Trust Mortgage Bank Plc" {% if bank_account.bank_name == "Infinity Trust Mortgage Bank Plc" %}selected{% endif %}>Infinity Trust Mortgage Bank Plc</option>
+                                <option value="Living Trust Mortgage Bank Plc" {% if bank_account.bank_name == "Living Trust Mortgage Bank Plc" %}selected{% endif %}>Living Trust Mortgage Bank Plc</option>
+                                <option value="Refuge Mortgage Bank Limited" {% if bank_account.bank_name == "Refuge Mortgage Bank Limited" %}selected{% endif %}>Refuge Mortgage Bank Limited</option>
+                                <option value="SafeTrust Mortgage Bank Limited" {% if bank_account.bank_name == "SafeTrust Mortgage Bank Limited" %}selected{% endif %}>SafeTrust Mortgage Bank Limited</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="payout_method" id="payout-paypal" 
+                            value="paypal" {% if paypal_account and not bank_account %}checked{% endif %}>
+                    <label class="form-check-label" for="payout-paypal">
+                        <strong>PayPal</strong>
+                    </label>
+                </div>
+                
+                <div id="paypal-details" class="mt-3" {% if not paypal_account or bank_account %}style="display: none;"{% endif %}>
+                    <div class="mb-3">
+                        <label for="paypal-email" class="form-label">PayPal Email</label>
+                        <input type="email" class="form-control" id="paypal-email" name="paypal_email" 
+                                value="{{ paypal_account.email|default:'' }}"
+                                placeholder="Enter your PayPal email address">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button type="button" id="save-button" class="btn btn-primary btn-lg">Save Payout Settings</button>
+            </div>
+        </form>
+        
+        <!-- Confirmation Modal -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Payout Settings</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please verify your payout information:</p>
+                        <div id="confirmation-details"></div>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="confirm-checkbox">
+                            <label class="form-check-label" for="confirm-checkbox">
+                                I confirm these details are correct
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirm-save" class="btn btn-primary" disabled>Confirm & Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payout Information Section -->
+        <div class="payout-info">
+            <h4 class="mb-3">Payout Information</h4>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Important Notes</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Payouts are processed every 7 days (Mondays)</li>
+                        <li class="list-group-item">Minimum payout: ₦10,000 for Nigerian bank transfers</li>
+                        <li class="list-group-item">Minimum payout: $20 for PayPal transfers</li>
+                        <li class="list-group-item">Naira payouts typically reflect within 24 hours for commercial banks</li>
+                        <li class="list-group-item">Microfinance bank transfers may take 2-3 business days</li>
+                        <li class="list-group-item">PayPal transfers typically complete within 3-5 business days</li>
+                        <li class="list-group-item">All transfers are subject to bank processing times</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5>Supported Payment Methods</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Nigerian Banks</h6>
+                                <p class="card-text">All NDIC-insured commercial banks, microfinance banks, and other financial institutions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">International</h6>
+                                <p class="card-text">PayPal (supports all countries where PayPal operates)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('payout-form');
+            const saveButton = document.getElementById('save-button');
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            const confirmCheckbox = document.getElementById('confirm-checkbox');
+            const confirmSaveButton = document.getElementById('confirm-save');
+            
+            // Toggle between payment methods
+            document.querySelectorAll('input[name="payout_method"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'nigerian_bank') {
+                        document.getElementById('nigerian-bank-details').style.display = 'block';
+                        document.getElementById('paypal-details').style.display = 'none';
+                        // Make Nigerian bank fields required
+                        document.getElementById('account-name').required = true;
+                        document.getElementById('account-number').required = true;
+                        document.getElementById('bank-name').required = true;
+                        // Make PayPal fields not required
+                        document.getElementById('paypal-email').required = false;
+                    } else {
+                        document.getElementById('nigerian-bank-details').style.display = 'none';
+                        document.getElementById('paypal-details').style.display = 'block';
+                        // Make Nigerian bank fields not required
+                        document.getElementById('account-name').required = false;
+                        document.getElementById('account-number').required = false;
+                        document.getElementById('bank-name').required = false;
+                        // Make PayPal fields required
+                        document.getElementById('paypal-email').required = true;
+                    }
+                });
+            });
+            
+            // Save button click handler
+            saveButton.addEventListener('click', function() {
+                if(!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+                
+                // Prepare confirmation details
+                const formData = new FormData(form);
+                const payoutMethod = formData.get('payout_method');
+                let detailsHtml = '';
+                
+                if(payoutMethod === 'nigerian_bank') {
+                    detailsHtml = `
+                        <p><strong>Method:</strong> Nigerian Bank Transfer</p>
+                        <p><strong>Account Name:</strong> ${formData.get('account_name')}</p>
+                        <p><strong>Account Number:</strong> ${formData.get('account_number')}</p>
+                        <p><strong>Bank Name:</strong> ${document.getElementById('bank-name').options[document.getElementById('bank-name').selectedIndex].text}</p>
+                    `;
+                } else {
+                    detailsHtml = `
+                        <p><strong>Method:</strong> PayPal</p>
+                        <p><strong>PayPal Email:</strong> ${formData.get('paypal_email')}</p>
+                    `;
+                }
+                
+                document.getElementById('confirmation-details').innerHTML = detailsHtml;
+                confirmationModal.show();
+            });
+            
+            // Confirm checkbox handler
+            confirmCheckbox.addEventListener('change', function() {
+                confirmSaveButton.disabled = !this.checked;
+            });
+            
+            // Confirm save button handler
+            confirmSaveButton.addEventListener('click', function() {
+                // Submit the form
+                form.submit();
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

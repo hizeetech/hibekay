@@ -1,0 +1,99 @@
+{% extends "partials/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y">
+    <div class="container">
+        <div class="row">
+            {% include 'vendor/sidebar.html' %}
+            <main class="col-md-9">
+                <article class="card">
+                    <header class="card-header btn-success text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">
+                                <i class="fas fa-edit mr-2"></i>Update Category
+                            </h4>
+                            <a href="{% url 'vendor:categories' %}" class="btn btn-light btn-sm">
+                                <i class="fas fa-arrow-left mr-1"></i> Back
+                            </a>
+                        </div>
+                    </header>
+                    
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Current Image -->
+                            <div class="form-group text-center mb-4">
+                                {% if category.image %}
+                                <img src="{{ category.image.url }}" class="img-thumbnail" style="max-height: 200px;">
+                                {% else %}
+                                <div class="bg-light p-4">
+                                    <i class="fas fa-tags fa-3x text-muted"></i>
+                                    <p class="mt-2">No image uploaded</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Title -->
+                            <div class="form-group">
+                                <label class="font-weight-bold">Category Name *</label>
+                                <input type="text" 
+                                    name="title" 
+                                    class="form-control" 
+                                    value="{{ category.title }}"
+                                    required>
+                            </div>
+                            
+                            <!-- Slug -->
+                            <div class="form-group">
+                                <label class="font-weight-bold">URL Slug</label>
+                                <input type="text" 
+                                    name="slug" 
+                                    class="form-control" 
+                                    value="{{ category.slug }}">
+                            </div>
+                            
+                            <!-- New Image -->
+                            <div class="form-group">
+                                <label class="font-weight-bold">Update Image</label>
+                                <div class="custom-file">
+                                    <input type="file" name="image" class="custom-file-input" accept="image/*">
+                                    <label class="custom-file-label">Choose new image...</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="activeSwitch" name="active" {% if category.active %}checked{% endif %}>
+                                    <label class="custom-control-label font-weight-bold" for="activeSwitch">Active Category</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-4 pt-3 border-top">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save mr-2"></i> Save Changes
+                                </button>
+                                <a href="{% url 'vendor:category_detail' category.id %}" class="btn btn-outline-secondary btn-lg ml-2">
+                                    <i class="fas fa-times mr-2"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </article>
+            </main>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update file input label
+    document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : "Choose file...";
+        e.target.nextElementSibling.textContent = fileName;
+    });
+});
+</script>
+{% endblock %}

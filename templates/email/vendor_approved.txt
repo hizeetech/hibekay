@@ -1,0 +1,9 @@
+Congratulations, {{ store_name }}!
+
+Your vendor account has been approved by our admin team.
+
+You can now:
+- Login to your account: {{ login_url }}
+- Access your vendor dashboard: {{ dashboard_url }}
+
+Thank you for joining our platform!

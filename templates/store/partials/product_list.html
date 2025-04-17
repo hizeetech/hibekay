@@ -1,0 +1,11 @@
+{% for p in products %}
+    <div class="col-lg-4">
+        <div class="product_grid card b-0  rounded-3 shadow m-2 p-2">
+            <!-- Your existing product card HTML here -->
+        </div>
+    </div>
+{% empty %}
+    <div class="col-12">
+        <p class="text-center">No products found matching your search.</p>
+    </div>
+{% endfor %}

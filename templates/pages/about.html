@@ -1,0 +1,99 @@
+{% extends 'partials/base.html' %} {% load static %} {% load humanize %} {% block content %}
+<div class="gray py-3">
+    <div class="container">
+        <div class="row">
+            <div class="colxl-12 col-lg-12 col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="middle">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+        
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="abt_caption">
+                    <h2 class="ft-medium mb-4">About Us</h2>
+                    <h3>What Makes Us Different?</h3>
+                    <p class="mb-4">
+                        ✅ Multi-Vendor Flexibility 
+                        Vendors from across Nigeria can easily register, set up their store, and start selling within minutes.
+                    </p>
+                    <p class="mb-4">
+                        ✅ Secure Transactions
+                        We ensure that all payments are encrypted and customer data is protected with the latest technologies.
+                    </p>
+                    <p class="mb-4">
+                        ✅ Wide Range of Products
+                        From electronics to fashion, groceries, and handmade crafts, you’ll find it all on Mart9ja.
+                    </p>
+                    <p class="mb-4">
+                        ✅ Vendor Support & Growth Tools
+                        We provide tools, analytics, and customer support to help our vendors succeed.
+                    </p>
+                    <p class="mb-4">
+                        ✅ Customer-Centric Approach
+                        Our platform is designed to deliver a seamless shopping experience, backed by responsive support and transparent policies.
+                    </p>
+                    
+                    <h3>🤝 Our Commitment</h3>
+                    <p class="mb-4">
+                        We are committed to creating opportunities, building trust, and supporting innovation. Mart9ja is not just a marketplace — it’s a movement towards digital inclusion and local economic empowerment.
+
+                        Join us today — whether as a vendor, shopper, or supporter — and be part of the Mart9ja community shaping the future of commerce in Nigeria.
+                    </p>
+                    <div class="form-group mt-4">
+                        <a href="{% url 'store:shop' %}" class="btn btn-success rounded btn-sm text-white">Shop Now <i class="fas fa-shopping-cart ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="abt_caption">
+                    <img src="https://img.freepik.com/free-photo/group-multinational-busy-people-working-office_146671-15660.jpg?ga=GA1.1.654771032.1743791643&semt=ais_hybrid&w=740" class="img-fluid rounded" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="middle">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="abt_caption">
+                    <img src="https://img.freepik.com/free-photo/cyber-monday-shopping-sales_23-2148688508.jpg?ga=GA1.1.654771032.1743791643&semt=ais_hybrid&w=740" class="img-fluid rounded" alt="" />
+                </div>
+            </div>
+            
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="abt_caption">
+                    <h2 class="ft-medium mb-4">Our Mission & Vision</h2>
+                    <p class="mb-4">
+                        Welcome to Mart9ja — Nigeria’s Premier Multi-Vendor E-Commerce Marketplace.
+
+                        At Mart9ja, we are redefining how shopping and selling happens online. Our platform is designed to connect local vendors with shoppers across Nigeria and beyond, providing a safe, fast, and user-friendly marketplace where anyone can buy and sell with ease.
+
+                        We understand the unique needs of both buyers and sellers in today’s digital economy. That’s why Mart9ja was built with a clear focus on empowering businesses, especially small and medium-scale enterprises (SMEs), to grow their reach and thrive in the online space. Whether you’re a vendor looking to showcase your products or a customer searching for quality goods at great prices, Mart9ja is your one-stop destination.
+                    </p>
+                    
+                    <div class="form-group mt-4">
+                        <a href="{% url 'store:shop' %}" class="btn btn-success rounded btn-sm text-white">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}
