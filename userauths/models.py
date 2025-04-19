@@ -19,7 +19,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # sourcery skip: none-compare
         email_username, _ = self.email.split('@')
         if self.username == "" or self.username == None:
             self.username = email_username
